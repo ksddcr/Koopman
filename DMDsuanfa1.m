@@ -1,0 +1,12 @@
+X = B(:,1:end-1);
+Y= B(:,2:end);%%B为输入原始矩阵，X为系统前n-1个时刻状态，Y为系统后n-1个时刻的状态
+[U, S, V] = svd( X, 'econ' );%%对X进行简易的奇异值分解
+E= pinv(S);%%计算X的奇异值分解中S矩阵的广义逆矩阵
+Aw = U'*Y*V*E;%%定义的A弯
+[w, u] = eigs(Aw, size(Aw,1));%%计算A弯的特征值与特征向量
+Modes=U*w;%%得出DMD的模态
+A=Modes*u*(pinv(w))*U';%%相应的DMD近似的Koopman算子可以得出
+C=(A)*Y;
+C=real(C);
+D=round(C);
+F(:,1)=D(:,end);%%一步预测，取实数部分，取整。
