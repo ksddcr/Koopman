@@ -1,0 +1,192 @@
+library(readxl)
+library(tseries)
+library(forecast)
+library(zoo)
+pop = read_excel("C:\\Users\\133\\Desktop\\All_pop.xlsx")
+#计算usa数据
+pop.fit.usa = ts(pop$USA)
+plot(pop.fit.usa,col=4,pch=8,lwd=2)
+adf.test(pop.fit.usa)  #检验p-value = 0.9272  非平稳序列
+
+pop.dif1.usa = diff(diff(pop.fit.usa))
+plot(pop.dif1.usa)
+adf.test(pop.dif1.usa)
+for(i in 1:5) print(Box.test(pop.dif1.usa,type="Ljung-Box",lag=6*i))
+acf(pop.dif1.usa,lwd=2,col=4)
+pacf(pop.dif1.usa,lwd=2,col=4)
+pop.fit2.usa = arima(pop.fit.usa,order = c(3,2,4))
+for(i in 1:5) print(Box.test(pop.fit2.usa$residual,lag=6*i))  #残差检验
+pop.fore.usa = forecast(pop.fit2.usa,h=26)
+
+L1=pop.fore.usa$fitted-1.96*sqrt(pop.fit2.usa$sigma2)
+U1=pop.fore.usa$fitted+1.96*sqrt(pop.fit2.usa$sigma2)
+L2=ts(pop.fore.usa$lower[,2])
+U2=ts(pop.fore.usa$upper[,2])
+c1=min(pop.fit.usa,L1,U1)
+c2=max(pop.fit.usa,L2,U2)
+plot(pop.fit.usa,type="p",pch=8,ylim=c(c1,c2))
+lines(pop.fore.usa$fitted,col=2,lwd=2)
+lines(pop.fore.usa$mean,col=2,lwd=2)
+lines(L1,col=4,lty=2)
+lines(U1,col=4,lty=2)
+lines(L2,col=4,lty=2)
+lines(U2,col=4,lty=2)
+
+#计算Brazil有关数据
+
+pop.fit.Brazil = ts(na.omit(pop$Brazil))
+plot(pop.fit.Brazil,col=4,pch=8,lwd=2)
+adf.test(pop.fit.Brazil)  #检验p-value = 0.9798 平稳序列
+pop.dif1.Brazil = diff(diff(pop.fit.Brazil))
+plot(pop.dif1.Brazil)
+for(i in 1:5) print(Box.test(pop.dif1.Brazil,type="Ljung-Box",lag=6*i))
+acf(pop.dif1.Brazil,lwd=2,col=4)
+pacf(pop.dif1.Brazil,lwd=2,col=4)
+
+pop.fit2.Brazil = arima(pop.fit.B,order = c(6,2,2))
+for(i in 1:5) print(Box.test(pop.fit2.Brazil$residual,lag=6*i))  #残差检验
+pop.fore.Brazil = forecast(pop.fit2.Brazil,h=26)
+
+L1=pop.fore.Brazil$fitted-1.96*sqrt(pop.fit2.Brazil$sigma2)
+U1=pop.fore.Brazil$fitted+1.96*sqrt(pop.fit2.Brazil$sigma2)
+L2=ts(pop.fore.Brazil$lower[,2])
+U2=ts(pop.fore.Brazil$upper[,2])
+c1=min(pop.fit.Brazil,L1,U1)
+c2=max(pop.fit.Brazil,L2,U2)
+plot(pop.fit.Brazil,type="p",pch=8,ylim=c(c1,c2))
+lines(pop.fore.Brazil$fitted,col=2,lwd=2)
+lines(pop.fore.Brazil$mean,col=2,lwd=2)
+lines(L1,col=4,lty=2)
+lines(U1,col=4,lty=2)
+lines(L2,col=4,lty=2)
+lines(U2,col=4,lty=2)
+
+
+#计算UK有关数据
+
+pop.fit.uk = ts(na.omit(pop$UK))
+plot(pop.fit.uk,col=4,pch=8,lwd=2)
+adf.test(pop.fit.uk)  #检验p-value = 0.1429 非平稳序列
+pop.dif1.uk = diff(diff(pop.fit.uk))
+plot(pop.dif1.uk)
+adf.test(pop.dif1.uk)
+for(i in 1:5) print(Box.test(pop.dif1.uk,type="Ljung-Box",lag=6*i))
+acf(pop.dif1.uk,lwd=2,col=4)
+pacf(pop.dif1.uk,lwd=2,col=4)
+
+pop.fit2.uk = arima(pop.fit.uk,order = c(7,2,1))
+for(i in 1:5) print(Box.test(pop.fit2.uk$residual,lag=6*i))  #残差检验
+pop.fore.uk = forecast(pop.fit2.uk,h=26)
+
+L1=pop.fore.uk$fitted-1.96*sqrt(pop.fit2.uk$sigma2)
+U1=pop.fore.uk$fitted+1.96*sqrt(pop.fit2.uk$sigma2)
+L2=ts(pop.fore.uk$lower[,2])
+U2=ts(pop.fore.uk$upper[,2])
+c1=min(pop.fit.uk,L1,U1)
+c2=max(pop.fit.uk,L2,U2)
+plot(pop.fit.uk,type="p",pch=8,ylim=c(c1,c2))
+lines(pop.fore.uk$fitted,col=2,lwd=2)
+lines(pop.fore.uk$mean,col=2,lwd=2)
+lines(L1,col=4,lty=2)
+lines(U1,col=4,lty=2)
+lines(L2,col=4,lty=2)
+lines(U2,col=4,lty=2)
+
+
+#计算Australia有关数据
+
+pop.fit.aus = ts(na.omit(pop$Australia))
+plot(pop.fit.aus,col=4,pch=8,lwd=2)
+adf.test(pop.fit.aus)  #检验p-value = 0.3999 非平稳序列
+pop.dif1.aus = diff(diff(pop.fit.aus))
+plot(pop.dif1.aus)
+adf.test(pop.dif1.aus)
+for(i in 1:5) print(Box.test(pop.dif1.aus,type="Ljung-Box",lag=6*i))
+acf(pop.dif1.aus,lwd=2,col=4)
+pacf(pop.dif1.aus,lwd=2,col=4)
+
+pop.fit2.aus = arima(pop.fit.aus,order = c(2,2,3))
+for(i in 1:5) print(Box.test(pop.fit2.aus$residual,lag=6*i))  #残差检验
+pop.fore.aus = forecast(pop.fit2.aus,h=26)
+
+L1=pop.fore.aus$fitted-1.96*sqrt(pop.fit2.aus$sigma2)
+U1=pop.fore.aus$fitted+1.96*sqrt(pop.fit2.aus$sigma2)
+L2=ts(pop.fore.aus$lower[,2])
+U2=ts(pop.fore.aus$upper[,2])
+c1=min(pop.fit.aus,L1,U1)
+c2=max(pop.fit.aus,L2,U2)
+plot(pop.fit.aus,type="p",pch=8,ylim=c(c1,c2))
+lines(pop.fore.aus$fitted,col=2,lwd=2)
+lines(pop.fore.aus$mean,col=2,lwd=2)
+lines(L1,col=4,lty=2)
+lines(U1,col=4,lty=2)
+lines(L2,col=4,lty=2)
+lines(U2,col=4,lty=2)
+
+#计算Japan相关数据
+pop.fit.jap = ts(na.omit(pop$Japan))
+plot(pop.fit.jap,col=4,pch=8,lwd=2)
+adf.test(pop.fit.jap)  #检验p-value = 0.4861 非平稳序列
+pop.dif1.jap = diff(diff(pop.fit.jap))
+plot(pop.dif1.jap)
+adf.test(pop.dif1.jap)
+for(i in 1:5) print(Box.test(pop.dif1.jap,type="Ljung-Box",lag=6*i))
+acf(pop.dif1.jap,lwd=2,col=4)
+pacf(pop.dif1.jap,lwd=2,col=4)
+
+pop.fit2.jap = arima(pop.fit.jap,order = c(7,2,1))
+for(i in 1:5) print(Box.test(pop.fit2.jap$residual,lag=6*i))  #残差检验
+pop.fore.jap = forecast(pop.fit2.jap,h=26)
+
+L1=pop.fore.jap$fitted-1.96*sqrt(pop.fit2.jap$sigma2)
+U1=pop.fore.jap$fitted+1.96*sqrt(pop.fit2.jap$sigma2)
+L2=ts(pop.fore.jap$lower[,2])
+U2=ts(pop.fore.jap$upper[,2])
+c1=min(pop.fit.jap,L1,U1)
+c2=max(pop.fit.jap,L2,U2)
+plot(pop.fit.jap,type="p",pch=8,ylim=c(c1,c2))
+lines(pop.fore.jap$fitted,col=2,lwd=2)
+lines(pop.fore.jap$mean,col=2,lwd=2)
+lines(L1,col=4,lty=2)
+lines(U1,col=4,lty=2)
+lines(L2,col=4,lty=2)
+lines(U2,col=4,lty=2)
+
+#计算SA相关数据
+pop.fit.sa = ts(na.omit(pop$SA))
+plot(pop.fit.sa,col=4,pch=8,lwd=2)
+adf.test(pop.fit.sa)  #检验p-value = 0.01 非平稳序列
+pop.dif1.sa = diff(diff(pop.fit.sa))
+plot(pop.dif1.sa)
+adf.test(pop.dif1.sa)
+for(i in 1:5) print(Box.test(pop.dif1.sa,type="Ljung-Box",lag=6*i))
+acf(pop.dif1.sa,lwd=2,col=4)
+pacf(pop.dif1.sa,lwd=2,col=4)
+
+pop.fit2.sa = arima(pop.fit.sa,order = c(7,2,4))
+for(i in 1:5) print(Box.test(pop.fit2.sa$residual,lag=6*i))  #残差检验
+pop.fore.sa = forecast(pop.fit2.sa,h=26)
+
+L1=pop.fore.sa$fitted-1.96*sqrt(pop.fit2.sa$sigma2)
+U1=pop.fore.sa$fitted+1.96*sqrt(pop.fit2.sa$sigma2)
+L2=ts(pop.fore.sa$lower[,2])
+U2=ts(pop.fore.sa$upper[,2])
+c1=min(pop.fit.sa,L1,U1)
+c2=max(pop.fit.sa,L2,U2)
+plot(pop.fit.sa,type="p",pch=8,ylim=c(c1,c2))
+lines(pop.fore.sa$fitted,col=2,lwd=2)
+lines(pop.fore.sa$mean,col=2,lwd=2)
+lines(L1,col=4,lty=2)
+lines(U1,col=4,lty=2)
+lines(L2,col=4,lty=2)
+lines(U2,col=4,lty=2)
+
+
+mean.usa = pop.fore.usa$mean
+mean.Brazil = pop.fore.Brazil$mean
+mean.uk = pop.fore.uk$mean
+mean.aus = pop.fore.aus$mean
+mean.jap = pop.fore.jap$mean
+mean.sa = pop.fore.sa$mean
+all = cbind(mean.usa,mean.Brazil,mean.uk,mean.uk,mean.aus,mean.jap,mean.sa)
+write.csv(all,file="C:\\Users\\133\\Desktop\\All_pop_Fore.csv")
